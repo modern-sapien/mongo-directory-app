@@ -39,6 +39,7 @@ const BootcampSchema = new mongoose.Schema({
     location: {
         // GeoJSON point
         type: {String,
+        // enum means only available values
         enum: ["Point"],
         required: true  },
 
@@ -53,5 +54,49 @@ const BootcampSchema = new mongoose.Schema({
         zipcode: String,
         country: String,
     },
+    careers:    {
+        type: [String],
+        required: true,
+        enum: [
+            "Web Development",
+            "Mobile Development",
+            "UI/UX",
+            "Data Science",
+            "Business",
+            "Other"
+        ]
+    },
+    averageRating: {
+        type: Number,
+        min: [1, "rating must be at least 1"],
+        max: [10, "rating cannot be more than 10"]
+    },
+    averageCost: Number,
+    photo: {
+        type: String,
+        default: "no-photo.jpg"
+    },
+    housing: {
+        type: Boolean,
+        default: false
+    },
+    jobAssistance: {
+        type: Boolean,
+        default: false
+    },
+    jobGuarantee: {
+        type: Boolean,
+        default: false
+    },
+    acceptGi: {
+        type: Boolean,
+        default: false
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
 
 })
+
+module.exports = mongoose.model("bootcamp", BootcampSchema)
