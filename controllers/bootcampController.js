@@ -25,14 +25,14 @@ exports.getBootcamp = async (req, res, next) => {
         const bootcamp = await Bootcamp.findById(req.params.id);
 
         if (!bootcamp)  {
-            // not formatted object ID
-            return next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404))
+            // notformatted object ID
+            return next
+            (new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404))
         }
         res.status(200).json({ success: true, data: bootcamp})
     } catch (err)   {
-            // formatted object ID
-        next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404))
-    }
+            next(err)
+        }
 };
 
 // @desc    Create new bootcamp
