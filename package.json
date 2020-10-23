@@ -1,0 +1,27 @@
+{
+  "name": "mongo-directory-app",
+  "version": "1.0.0",
+  "description": "Mongo db bootcamp directory",
+  "main": "server.js",
+  "scripts": {
+    "start": "SET NODE_ENV=production & node server",
+    "dev": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/modern-sapien/mongo-directory-app.git"
+  },
+  "author": "Jonathan Canales",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/modern-sapien/mongo-directory-app/issues"
+  },
+  "homepage": "https://github.com/modern-sapien/mongo-directory-app#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
