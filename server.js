@@ -2,11 +2,16 @@ const express = require("express");
 const dotenv = require("dotenv");
 // Morgan is a HTTP request middleware logger
 const morgan = require("morgan");
-// Router Files
-const bootcamps = require("./routes/bootcamps")
+const connectDB = require("./config/db")
 
 // Load env variables
 dotenv.config({path: "./config/config.env"})
+
+// Connect to database
+connectDB();
+
+// Router Files
+const bootcamps = require("./routes/bootcamps")
 
 const app = express();
 
