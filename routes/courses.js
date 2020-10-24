@@ -6,13 +6,18 @@ const {
   updateCourse,
   deleteCourse
 } = require("../controllers/courseController");
-const { update } = require("../models/Course");
+
+const Course = require("../models/Course")
+const advancedResults = require("../middleware/advancedResults");
 
 // mergeParams allows us to allow bootcamp.js router to send traffic
 const router = express.Router({ mergeParams: true });
 
 router.route("/")
-    .get(getCourses)
+    .get(advancedResults(Course, {
+      path: "bootcamp",
+      select: "name description",
+    }), getCourses)
     .post(addCourse);
 
 router.route("/:id")
