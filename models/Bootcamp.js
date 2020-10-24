@@ -129,4 +129,4 @@ BootcampSchema.pre("save", async function(next)   {
 })
 
 
-module.exports = mongoose.model("bootcamp", BootcampSchema)
+module.exports = mongoose.model("Bootcamp", BootcampSchema)
