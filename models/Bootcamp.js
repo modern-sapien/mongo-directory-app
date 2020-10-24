@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
+const geocoder = require("../utils/geocoder")
 
 const BootcampSchema = new mongoose.Schema({
     name: {
@@ -98,5 +100,16 @@ const BootcampSchema = new mongoose.Schema({
     },
 
 })
+
+// Create bootcamp slug from the name, calls next middleware
+// Makes user friendly URL from name field
+BootcampSchema.pre("save", function(next)   {
+    this.slug = slugify(this.name, { lower: true })
+    next()
+})
+
+// Geocode & create location field
+
+
 
 module.exports = mongoose.model("bootcamp", BootcampSchema)
