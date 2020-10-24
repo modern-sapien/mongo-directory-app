@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs")
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -19,7 +20,7 @@ const UserSchema = new mongoose.Schema({
         enum: ["user", "publisher"],
         default: "user"
     },
-    passsword: {
+    password: {
         type: String,
         required: [true, "Please add a password"],
         minlength: 6,
@@ -31,6 +32,14 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
+})
+
+// Encrypt password using bcrypt before it saved to database
+UserSchema.pre("save", async function(next) {
+    // amount of salt rounds for hashing
+    const salt = await bcrypt.genSalt(10);
+    // intercepting password & then hashing before adding to DB
+    this.password = await bcrypt.hash(this.password, salt)
 })
 
 module.exports = mongoose.model("User", UserSchema)
