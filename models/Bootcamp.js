@@ -109,7 +109,24 @@ BootcampSchema.pre("save", function(next)   {
 })
 
 // Geocode & create location field
-
+BootcampSchema.pre("save", async function(next)   {
+    // any fields above we can access with this keyword
+    const loc = await geocoder.geocode(this.address);
+    // in geocode documentation location is an array of these values
+    this.location = {
+        type: "Point",
+        coordinates: [loc[0].longitude, loc[0].latitude],
+        formattedAddress: loc[0].formattedAddress,
+        street: loc[0].streetName,
+        city: loc[0].city,
+        state: loc[0].stateCode,
+        zipcode: loc[0].zipCode,
+        county: loc[0].countryCode,
+    }
+    // Do not save address in DB
+    this.address = undefined,
+    next()
+})
 
 
 module.exports = mongoose.model("bootcamp", BootcampSchema)
