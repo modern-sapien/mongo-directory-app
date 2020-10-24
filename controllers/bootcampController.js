@@ -1,3 +1,4 @@
+path = require("path")
 const ErrorResponse = require("../utils/errorResponse");
 const Bootcamp = require("../models/Bootcamp");
 const geocoder = require("../utils/geocoder")
@@ -189,5 +190,27 @@ exports.bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
       return  next(new ErrorResponse(`Please upload an image file`, 400)) 
     }
 
-    console.log(bootcamp)
+    // Check filesize
+    if(file.size > process.env.MAX_FILE_UPLOAD) {
+        return  next(new ErrorResponse(`Please upload an image less than ${process.env.MAX_FILE_UPLOAD}`, 400)) 
+    }
+
+    // Create custom filename to ensure that no photos uploaded have same name
+    // Uses path.parse to add appropriate end of file extension name
+    file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
+
+    file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async err =>{
+        if (err)    {
+            console.error(err)
+            return next(
+                new ErrorResponse(`Problem with file upload`, 500)) 
+        }
+        
+        await Bootcamp.findByIdAndUpdate(req.params.id, {photo: file.name})
+
+        res.status(200).json({
+            success: true,
+            data: file.name
+        })
+    })
 });
