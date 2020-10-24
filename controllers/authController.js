@@ -7,7 +7,6 @@ const asyncHandler = require("../middleware/async");
 // @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
     const { name, email, password, role } = req.body
-
     // Create user // Hashing password afterward and keeping controllers clean
     const user = await User.create({
         name, 
@@ -15,7 +14,6 @@ exports.register = asyncHandler(async (req, res, next) => {
         password,
         role
     });
-
     // Creating a cookie with a token in it
     sendTokenResponse(user, 200, res);
 });
@@ -33,12 +31,10 @@ exports.login = asyncHandler(async (req, res, next) => {
 
     // Check for user // Model instance includes pasword 
     const user = await User.findOne({ email }).select("+password");
-
     if(!user)   {
         // 401 unauthorized
         return next(new ErrorResponse("Invalid credentials", 401))
     }
-
     // Check if password matches
     // Awaits bcrypt compare function, while entering in the sign in password from a user
     const isMatch = await user.matchPassword(password);
@@ -73,3 +69,16 @@ const sendTokenResponse = (user, statusCode, res) => {
     .cookie("token", token, options)
     .json({success: true, token})
 }
+
+
+// @desc    GET current logged in user
+// @route   GET /api/v1/auth/me
+// @access  Private
+exports.getMe = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({
+        success: true,
+        data: user
+    })
+})
