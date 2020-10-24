@@ -1,13 +1,14 @@
 const express = require("express");
 const dotenv = require("dotenv");
 // Morgan is a HTTP request middleware logger
-const colors = require("colors");
 const morgan = require("morgan");
-const errorHandler = require("./middleware/error")
-const connectDB = require("./config/db")
+const colors = require("colors");
+const fileupload = require("express-fileupload");
+const errorHandler = require("./middleware/error");
+const connectDB = require("./config/db");
 
 // Load env variables
-dotenv.config({path: "./config/config.env"})
+dotenv.config({path: "./config/config.env"});
 
 const app = express();
 
@@ -18,13 +19,16 @@ app.use(express.json());
 connectDB();
 
 // Router Files
-const bootcamps = require("./routes/bootcamps")
-const courses = require("./routes/courses")
+const bootcamps = require("./routes/bootcamps");
+const courses = require("./routes/courses");
 
 // Dev Logging Middleware
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"))
 }
+
+// File Uploading
+app.use(fileupload())
 
 // Mount routers
 app.use("/api/v1/bootcamps", bootcamps)
