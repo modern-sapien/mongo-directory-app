@@ -38,6 +38,10 @@ const UserSchema = new mongoose.Schema({
 
 // Encrypt password using bcrypt before it saved to database
 UserSchema.pre("save", async function (next) {
+    if(!this.isModified("password")) {
+        next()
+    }
+
   // amount of salt rounds for hashing
   const salt = await bcrypt.genSalt(10);
   // intercepting password & then hashing before adding to DB
